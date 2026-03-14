@@ -47,7 +47,7 @@ export default function PageAgentButton() {
           baseURL: '/api/proxy/llm',
           apiKey: token,
           language: 'zh-CN',
-          ui: false,
+          // ui: false,
         });
         setAgentReady(true);
       } catch {

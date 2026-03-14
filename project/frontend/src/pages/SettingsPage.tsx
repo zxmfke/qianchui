@@ -318,7 +318,7 @@ export default function SettingsPage() {
                   <div key={key.id} className="flex items-center gap-2 p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
                     <Key className="w-4 h-4 text-slate-500 flex-shrink-0" />
                     <div className="flex-1">
-                      <p className="text-xs text-slate-200">{key.name}</p>
+                      <p className="text-xs text-slate-200">{key.nameKey}</p>
                       <p className="text-xs text-slate-500 font-mono">{key.key}</p>
                     </div>
                     <div className="text-right text-xs text-slate-500">
