@@ -1,0 +1,251 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-7.4.4, pluggy-1.6.0 -- E:\千锤营销话术AI操作系统项目\project\backend\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: E:\千锤营销话术AI操作系统项目\project\backend
+plugins: anyio-4.12.1, asyncio-0.23.3, cov-7.0.0
+asyncio: mode=Mode.STRICT
+collecting ... collected 31 items
+
+tests/test_e2e_comprehensive.py::TestE2EChannelMaterialExtended::test_full_lifecycle_with_extract FAILED
+
+================================== FAILURES ===================================
+_______ TestE2EChannelMaterialExtended.test_full_lifecycle_with_extract _______
+tests\test_e2e_comprehensive.py:410: in test_full_lifecycle_with_extract
+    update = await async_client.put(f"/api/v1/channel-materials/{mat_id}", json={
+venv\Lib\site-packages\httpx\_client.py:1914: in put
+    return await self.request(
+venv\Lib\site-packages\httpx\_client.py:1559: in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+venv\Lib\site-packages\httpx\_client.py:1646: in send
+    response = await self._send_handling_auth(
+venv\Lib\site-packages\httpx\_client.py:1674: in _send_handling_auth
+    response = await self._send_handling_redirects(
+venv\Lib\site-packages\httpx\_client.py:1711: in _send_handling_redirects
+    response = await self._send_single_request(request)
+venv\Lib\site-packages\httpx\_client.py:1748: in _send_single_request
+    response = await transport.handle_async_request(request)
+venv\Lib\site-packages\httpx\_transports\asgi.py:162: in handle_async_request
+    await self.app(scope, receive, send)
+venv\Lib\site-packages\fastapi\applications.py:1054: in __call__
+    await super().__call__(scope, receive, send)
+venv\Lib\site-packages\starlette\applications.py:123: in __call__
+    await self.middleware_stack(scope, receive, send)
+venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+venv\Lib\site-packages\starlette\middleware\cors.py:83: in __call__
+    await self.app(scope, receive, send)
+venv\Lib\site-packages\starlette\middleware\exceptions.py:62: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+venv\Lib\site-packages\starlette\_exception_handler.py:64: in wrapped_app
+    raise exc
+venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    await app(scope, receive, sender)
+venv\Lib\site-packages\starlette\routing.py:762: in __call__
+    await self.middleware_stack(scope, receive, send)
+venv\Lib\site-packages\starlette\routing.py:782: in app
+    await route.handle(scope, receive, send)
+venv\Lib\site-packages\starlette\routing.py:297: in handle
+    await self.app(scope, receive, send)
+venv\Lib\site-packages\starlette\routing.py:77: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+venv\Lib\site-packages\starlette\_exception_handler.py:64: in wrapped_app
+    raise exc
+venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    await app(scope, receive, sender)
+venv\Lib\site-packages\starlette\routing.py:72: in app
+    response = await func(request)
+venv\Lib\site-packages\fastapi\routing.py:299: in app
+    raise e
+venv\Lib\site-packages\fastapi\routing.py:294: in app
+    raw_response = await run_endpoint_function(
+venv\Lib\site-packages\fastapi\routing.py:191: in run_endpoint_function
+    return await dependant.call(**values)
+app\api\channel_material.py:152: in update_channel_material
+    return _to_dict(m)
+app\api\channel_material.py:32: in _to_dict
+    "updated_at": m.updated_at.isoformat() if m.updated_at else None,
+venv\Lib\site-packages\sqlalchemy\orm\attributes.py:566: in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+venv\Lib\site-packages\sqlalchemy\orm\attributes.py:1086: in get
+    value = self._fire_loader_callables(state, key, passive)
+venv\Lib\site-packages\sqlalchemy\orm\attributes.py:1116: in _fire_loader_callables
+    return state._load_expired(state, passive)
+venv\Lib\site-packages\sqlalchemy\orm\state.py:798: in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+venv\Lib\site-packages\sqlalchemy\orm\loading.py:1651: in load_scalar_attributes
+    result = load_on_ident(
+venv\Lib\site-packages\sqlalchemy\orm\loading.py:507: in load_on_ident
+    return load_on_pk_identity(
+venv\Lib\site-packages\sqlalchemy\orm\loading.py:692: in load_on_pk_identity
+    session.execute(
+venv\Lib\site-packages\sqlalchemy\orm\session.py:2308: in execute
+    return self._execute_internal(
+venv\Lib\site-packages\sqlalchemy\orm\session.py:2190: in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+venv\Lib\site-packages\sqlalchemy\orm\context.py:293: in orm_execute_statement
+    result = conn.execute(
+venv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+venv\Lib\site-packages\sqlalchemy\sql\elements.py:517: in _execute_on_connection
+    return connection._execute_clauseelement(
+venv\Lib\site-packages\sqlalchemy\engine\base.py:1639: in _execute_clauseelement
+    ret = self._execute_context(
+venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+venv\Lib\site-packages\sqlalchemy\engine\base.py:2347: in _handle_dbapi_exception
+    raise exc_info[1].with_traceback(exc_info[2])
+venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+venv\Lib\site-packages\sqlalchemy\engine\default.py:922: in do_execute
+    cursor.execute(statement, parameters)
+venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py:146: in execute
+    self._adapt_connection._handle_exception(error)
+venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py:298: in _handle_exception
+    raise error
+venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py:123: in execute
+    _cursor = self.await_(self._connection.cursor())
+venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py:121: in await_only
+    raise exc.MissingGreenlet(
+E   sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+----------------------------- Captured log setup ------------------------------
+WARNING  passlib.handlers.bcrypt:bcrypt.py:622 (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+------------------------------ Captured log call ------------------------------
+ERROR    app.main:main.py:100 Unhandled exception: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+Traceback (most recent call last):
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 83, in __call__
+    await self.app(scope, receive, send)
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\starlette\routing.py", line 762, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\starlette\routing.py", line 782, in app
+    await route.handle(scope, receive, send)
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\starlette\routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\starlette\routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\starlette\routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\fastapi\routing.py", line 299, in app
+    raise e
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\fastapi\routing.py", line 294, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\fastapi\routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\app\api\channel_material.py", line 152, in update_channel_material
+    return _to_dict(m)
+           ^^^^^^^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\app\api\channel_material.py", line 32, in _to_dict
+    "updated_at": m.updated_at.isoformat() if m.updated_at else None,
+                                              ^^^^^^^^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 566, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1086, in get
+    value = self._fire_loader_callables(state, key, passive)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1116, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\orm\state.py", line 798, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 1651, in load_scalar_attributes
+    result = load_on_ident(
+             ^^^^^^^^^^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 507, in load_on_ident
+    return load_on_pk_identity(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 692, in load_on_pk_identity
+    session.execute(
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2308, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2190, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\orm\context.py", line 293, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+           ^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 517, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1639, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2347, in _handle_dbapi_exception
+    raise exc_info[1].with_traceback(exc_info[2])
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 922, in do_execute
+    cursor.execute(statement, parameters)
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 146, in execute
+    self._adapt_connection._handle_exception(error)
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 298, in _handle_exception
+    raise error
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 123, in execute
+    _cursor = self.await_(self._connection.cursor())
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 121, in await_only
+    raise exc.MissingGreenlet(
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+============================== warnings summary ===============================
+tests\conftest.py:94
+  E:\千锤营销话术AI操作系统项目\project\backend\tests\conftest.py:94: UserWarning: PostgreSQL not reachable (sqlite+aiosqlite:///./qianchui.db), falling back to SQLite for tests.
+    warnings.warn(
+
+tests/test_e2e_comprehensive.py::TestE2EChannelMaterialExtended::test_full_lifecycle_with_extract
+  E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\pytest_asyncio\plugin.py:749: DeprecationWarning: The event_loop fixture provided by pytest-asyncio has been redefined in
+  E:\千锤营销话术AI操作系统项目\project\backend\tests\conftest.py:107
+  Replacing the event_loop fixture with a custom implementation is deprecated
+  and will lead to errors in the future.
+  If you want to request an asyncio event loop with a scope other than function
+  scope, use the "scope" argument to the asyncio mark when marking the tests.
+  If you want to return different types of event loops, use the event_loop_policy
+  fixture.
+  
+    warnings.warn(
+
+tests/test_e2e_comprehensive.py::TestE2EChannelMaterialExtended::test_full_lifecycle_with_extract
+tests/test_e2e_comprehensive.py::TestE2EChannelMaterialExtended::test_full_lifecycle_with_extract
+tests/test_e2e_comprehensive.py::TestE2EChannelMaterialExtended::test_full_lifecycle_with_extract
+tests/test_e2e_comprehensive.py::TestE2EChannelMaterialExtended::test_full_lifecycle_with_extract
+tests/test_e2e_comprehensive.py::TestE2EChannelMaterialExtended::test_full_lifecycle_with_extract
+tests/test_e2e_comprehensive.py::TestE2EChannelMaterialExtended::test_full_lifecycle_with_extract
+  E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\jose\jwt.py:311: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now = timegm(datetime.utcnow().utctimetuple())
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_e2e_comprehensive.py::TestE2EChannelMaterialExtended::test_full_lifecycle_with_extract - sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+======================== 1 failed, 8 warnings in 2.32s ========================

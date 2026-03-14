@@ -1,0 +1,64 @@
+[
+  {
+    "id": "DIAG-001",
+    "description": "低质量话术 — 过于直接和促销化",
+    "input": {
+      "script_content": "你要不要做双眼皮？我们现在打折，赶紧下单。",
+      "scenario": "首次咨询"
+    },
+    "expected": {
+      "overall_score": {"_check": "range", "min": 0, "max": 50},
+      "dimensions": {"_check": "exists"},
+      "suggestions": {"_check": "min_length", "value": 1}
+    }
+  },
+  {
+    "id": "DIAG-002",
+    "description": "高质量话术 — 专业且有同理心",
+    "input": {
+      "script_content": "您好，非常感谢您对我们的信任。关于双眼皮手术，我想先了解一下您的具体需求和期望效果。每个人的眼部条件不同，我们会根据您的面部特征为您定制最适合的方案。您方便先做一个简单的面诊吗？这样我可以给您更专业、更有针对性的建议。",
+      "scenario": "首次咨询"
+    },
+    "expected": {
+      "overall_score": {"_check": "range", "min": 70, "max": 100},
+      "dimensions": {"_check": "exists"},
+      "suggestions": {"_check": "exists"}
+    }
+  },
+  {
+    "id": "DIAG-003",
+    "description": "中等质量 — 基本合格但缺乏引导",
+    "input": {
+      "script_content": "您好，请问想了解什么项目？我们有双眼皮、隆鼻、水光针等项目。",
+      "scenario": "首次咨询"
+    },
+    "expected": {
+      "overall_score": {"_check": "range", "min": 40, "max": 70},
+      "suggestions": {"_check": "min_length", "value": 1}
+    }
+  },
+  {
+    "id": "DIAG-004",
+    "description": "异议处理话术诊断",
+    "input": {
+      "script_content": "我理解您对价格的顾虑，这是很正常的。我们的定价包含了术前全套检查、资深专家亲自操作、以及术后三个月的跟踪护理。很多客户最初也有同样的想法，但做完之后都觉得物超所值。我可以给您看一些案例效果对比，您看可以吗？",
+      "scenario": "价格异议"
+    },
+    "expected": {
+      "overall_score": {"_check": "range", "min": 65, "max": 100},
+      "dimensions": {"_check": "exists"}
+    }
+  },
+  {
+    "id": "DIAG-005",
+    "description": "带有禁忌用语的话术",
+    "input": {
+      "script_content": "我们的效果绝对是最好的，保证你满意。做完包你变大明星，不好看我赔你钱。",
+      "scenario": "咨询介绍"
+    },
+    "expected": {
+      "overall_score": {"_check": "range", "min": 0, "max": 40},
+      "suggestions": {"_check": "min_length", "value": 2}
+    }
+  }
+]

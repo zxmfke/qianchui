@@ -1,0 +1,178 @@
+..........................F............................................. [ 19%]
+....F................................................................... [ 38%]
+..FFFF.......................Fss..............................F......... [ 58%]
+...............ssssss................................................... [ 77%]
+........................................................................ [ 96%]
+............                                                             [100%]
+================================== FAILURES ===================================
+E:\千锤营销话术AI操作系统项目\project\backend\tests\test_api_extended.py:153: assert 405 == 200
+E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py:121: sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+E:\千锤营销话术AI操作系统项目\project\backend\tests\test_e2e_comprehensive.py:391: assert 403 == 200
+E:\千锤营销话术AI操作系统项目\project\backend\tests\test_e2e_comprehensive.py:445: assert 403 == 400
+E:\千锤营销话术AI操作系统项目\project\backend\tests\test_e2e_comprehensive.py:454: assert 403 == 400
+E:\千锤营销话术AI操作系统项目\project\backend\tests\test_e2e_comprehensive.py:463: KeyError: 'id'
+E:\千锤营销话术AI操作系统项目\project\backend\tests\test_e2e_frontend_backend.py:215: assert 403 == 200
+E:\千锤营销话术AI操作系统项目\project\backend\tests\test_integration.py:399: assert 403 == 200
+============================== warnings summary ===============================
+tests\conftest.py:94
+  E:\千锤营销话术AI操作系统项目\project\backend\tests\conftest.py:94: UserWarning: PostgreSQL not reachable (sqlite+aiosqlite:///./qianchui.db), falling back to SQLite for tests.
+    warnings.warn(
+
+venv\Lib\site-packages\pydantic\_internal\_config.py:271
+venv\Lib\site-packages\pydantic\_internal\_config.py:271
+venv\Lib\site-packages\pydantic\_internal\_config.py:271
+venv\Lib\site-packages\pydantic\_internal\_config.py:271
+venv\Lib\site-packages\pydantic\_internal\_config.py:271
+  E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\pydantic\_internal\_config.py:271: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+tests/test_ab_test.py::TestABTest::test_create_ab_test
+  E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\pytest_asyncio\plugin.py:749: DeprecationWarning: The event_loop fixture provided by pytest-asyncio has been redefined in
+  E:\千锤营销话术AI操作系统项目\project\backend\tests\conftest.py:107
+  Replacing the event_loop fixture with a custom implementation is deprecated
+  and will lead to errors in the future.
+  If you want to request an asyncio event loop with a scope other than function
+  scope, use the "scope" argument to the asyncio mark when marking the tests.
+  If you want to return different types of event loops, use the event_loop_policy
+  fixture.
+  
+    warnings.warn(
+
+tests/test_api_extended.py: 44 warnings
+tests/test_auth.py: 1 warning
+tests/test_channel_material.py: 29 warnings
+tests/test_conversations.py: 13 warnings
+tests/test_dashboard.py: 6 warnings
+tests/test_diagnosis.py: 9 warnings
+tests/test_e2e_comprehensive.py: 50 warnings
+tests/test_flywheel.py: 22 warnings
+tests/test_integration.py: 22 warnings
+tests/test_memory.py: 16 warnings
+tests/test_scripts.py: 17 warnings
+tests/test_services.py: 2 warnings
+tests/test_simulation.py: 10 warnings
+tests/test_skills.py: 10 warnings
+tests/test_training.py: 16 warnings
+tests/test_utils_deps.py: 5 warnings
+  E:\千锤营销话术AI操作系统项目\project\backend\venv\Lib\site-packages\jose\jwt.py:311: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now = timegm(datetime.utcnow().utctimetuple())
+
+tests/test_services.py::TestAuthService::test_decode_token_valid
+  tests\test_services.py:470: PytestWarning: The test <Function test_decode_token_valid> is marked with '@pytest.mark.asyncio' but it is not an async function. Please remove the asyncio mark. If the test is not marked explicitly, check for global marks applied via 'pytestmark'.
+    def test_decode_token_valid(self):
+
+tests/test_services.py::TestAuthService::test_decode_token_invalid
+  tests\test_services.py:481: PytestWarning: The test <Function test_decode_token_invalid> is marked with '@pytest.mark.asyncio' but it is not an async function. Please remove the asyncio mark. If the test is not marked explicitly, check for global marks applied via 'pytestmark'.
+    def test_decode_token_invalid(self):
+
+tests/test_services.py::TestConversationContext::test_build_system_prompt
+  tests\test_services.py:609: PytestWarning: The test <Function test_build_system_prompt> is marked with '@pytest.mark.asyncio' but it is not an async function. Please remove the asyncio mark. If the test is not marked explicitly, check for global marks applied via 'pytestmark'.
+    def test_build_system_prompt(self, test_db: AsyncSession):
+
+tests/test_skills_comprehensive.py::TestDataInsightSkill::test_generate_mock_summary
+  tests\test_skills_comprehensive.py:259: PytestWarning: The test <Function test_generate_mock_summary> is marked with '@pytest.mark.asyncio' but it is not an async function. Please remove the asyncio mark. If the test is not marked explicitly, check for global marks applied via 'pytestmark'.
+    def test_generate_mock_summary(self):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=============================== tests coverage ================================
+______________ coverage: platform win32, python 3.12.10-final-0 _______________
+
+Name                                Stmts   Miss  Cover   Missing
+-----------------------------------------------------------------
+app\__init__.py                         0      0   100%
+app\agent\__init__.py                   0      0   100%
+app\agent\context.py                   49      0   100%
+app\agent\runtime.py                   79     29    63%   94-97, 124-166, 171-178
+app\api\__init__.py                     0      0   100%
+app\api\ab_test.py                     25      0   100%
+app\api\annotation.py                  22      0   100%
+app\api\auth.py                        51      2    96%   24, 70
+app\api\channel_material.py            92      9    90%   202-210
+app\api\conversations.py               62     11    82%   129-152
+app\api\dashboard.py                   28      0   100%
+app\api\deps.py                        28      1    96%   32
+app\api\diagnosis.py                   47      2    96%   41-42
+app\api\flywheel.py                   142      1    99%   161
+app\api\memory.py                      70      0   100%
+app\api\optimization.py                27      0   100%
+app\api\scripts.py                     52      1    98%   139
+app\api\simulation.py                  87      6    93%   47-48, 101-102, 158-159
+app\api\skills.py                     106      5    95%   38-39, 103, 133, 175
+app\api\training.py                   103     12    88%   171-172, 184-194
+app\config.py                          18      0   100%
+app\database.py                        24     13    46%   13, 18-23, 33-39
+app\exceptions.py                      19      0   100%
+app\main.py                            81      8    90%   59-64, 80, 135
+app\models\__init__.py                 13      0   100%
+app\models\base.py                      8      0   100%
+app\models\channel_material.py         18      0   100%
+app\models\conversation.py             22      0   100%
+app\models\diagnosis.py                13      0   100%
+app\models\enterprise.py               16      0   100%
+app\models\flywheel.py                 32      0   100%
+app\models\memory.py                   53      0   100%
+app\models\optimization.py             98      0   100%
+app\models\script.py                   46      0   100%
+app\models\simulation.py               18      0   100%
+app\models\training.py                 19      0   100%
+app\models\user.py                     14      0   100%
+app\providers\__init__.py               0      0   100%
+app\providers\base.py                  13      2    85%   21, 30
+app\providers\factory.py               18      0   100%
+app\providers\openai_provider.py       21      0   100%
+app\schemas\__init__.py                 0      0   100%
+app\schemas\auth.py                    34      0   100%
+app\schemas\channel_material.py        16      0   100%
+app\schemas\common.py                  19      0   100%
+app\schemas\conversation.py            41      0   100%
+app\schemas\dashboard.py               41      0   100%
+app\schemas\diagnosis.py               34      0   100%
+app\schemas\flywheel.py                80      0   100%
+app\schemas\memory.py                  44      0   100%
+app\schemas\script.py                  61      0   100%
+app\schemas\simulation.py              38      0   100%
+app\schemas\training.py                46      0   100%
+app\services\__init__.py                0      0   100%
+app\services\auth_service.py           79      1    99%   133
+app\services\dashboard_service.py      65      0   100%
+app\services\diagnosis_engine.py      222     17    92%   181, 193, 204, 225, 243-244, 249, 255, 263, 266, 274-276, 290, 326, 332, 334
+app\services\script_service.py         97      2    98%   128-129
+app\skills\__init__.py                  0      0   100%
+app\skills\base.py                      5      1    80%   33
+app\skills\channel_material.py         46      0   100%
+app\skills\data_insight.py             41      0   100%
+app\skills\dispatcher.py               33      0   100%
+app\skills\flywheel_cascade.py         35      1    97%   119
+app\skills\flywheel_insight.py         31      0   100%
+app\skills\flywheel_sense.py           38      5    87%   104-106, 121, 123
+app\skills\memory_query.py             39      0   100%
+app\skills\registry.py                 20      1    95%   31
+app\skills\script_annotate.py          46      0   100%
+app\skills\script_diagnose.py          31      3    90%   124-126
+app\skills\script_optimize.py          37      0   100%
+app\skills\script_recommend.py         36      3    92%   119-121
+app\skills\script_simulate.py          66      3    95%   253-255
+app\skills\script_train.py             41      5    88%   98, 108, 122-124
+app\utils\__init__.py                   0      0   100%
+app\utils\auth.py                      22      0   100%
+app\utils\crypto.py                    18      8    56%   20, 24-33, 39-42
+app\utils\deps.py                      28      0   100%
+app\utils\i18n.py                      12      2    83%   33-34
+-----------------------------------------------------------------
+TOTAL                                3176    154    95%
+=========================== short test summary info ===========================
+FAILED tests/test_api_extended.py::TestConversationsExtended::test_stream_returns_streaming_response - assert 405 == 200
+ +  where 405 = <Response [405 Method Not Allowed]>.status_code
+FAILED tests/test_channel_material.py::TestChannelMaterial::test_update_material - sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+FAILED tests/test_e2e_comprehensive.py::TestE2EChannelMaterialExtended::test_full_lifecycle_with_extract - assert 403 == 200
+ +  where 403 = <Response [403 Forbidden]>.status_code
+FAILED tests/test_e2e_comprehensive.py::TestE2EChannelMaterialExtended::test_invalid_channel - assert 403 == 400
+ +  where 403 = <Response [403 Forbidden]>.status_code
+FAILED tests/test_e2e_comprehensive.py::TestE2EChannelMaterialExtended::test_invalid_material_type - assert 403 == 400
+ +  where 403 = <Response [403 Forbidden]>.status_code
+FAILED tests/test_e2e_comprehensive.py::TestE2EChannelMaterialExtended::test_invalid_status_update - KeyError: 'id'
+FAILED tests/test_e2e_frontend_backend.py::TestE2EChannelMaterial::test_channel_material_lifecycle - assert 403 == 200
+ +  where 403 = <Response [403 Forbidden]>.status_code
+FAILED tests/test_integration.py::TestE2EChannelMaterialFlow::test_channel_material_crud_flow - assert 403 == 200
+ +  where 403 = <Response [403 Forbidden]>.status_code
+8 failed, 356 passed, 8 skipped, 283 warnings in 173.09s (0:02:53)

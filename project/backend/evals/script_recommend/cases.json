@@ -1,0 +1,143 @@
+[
+  {
+    "id": "REC-001",
+    "description": "首次咨询场景推荐开场白",
+    "input": {
+      "scenario": "客户首次到店咨询双眼皮手术",
+      "customer_profile": {
+        "stage": "首次咨询",
+        "project": "双眼皮",
+        "concern": "效果自然"
+      }
+    },
+    "expected": {
+      "recommendations": {"_check": "min_length", "value": 1}
+    }
+  },
+  {
+    "id": "REC-002",
+    "description": "价格异议场景推荐",
+    "input": {
+      "scenario": "客户觉得价格太贵，犹豫不决",
+      "customer_profile": {
+        "stage": "议价阶段",
+        "concern": "价格敏感"
+      }
+    },
+    "expected": {
+      "recommendations": {"_check": "min_length", "value": 1}
+    }
+  },
+  {
+    "id": "REC-003",
+    "description": "复购客户推荐",
+    "input": {
+      "scenario": "老客户第二次咨询想做水光针",
+      "customer_profile": {
+        "stage": "复购",
+        "project": "水光针",
+        "history": "曾做过玻尿酸"
+      }
+    },
+    "expected": {
+      "recommendations": {"_check": "min_length", "value": 1}
+    }
+  },
+  {
+    "id": "REC-004",
+    "description": "竞品对比场景",
+    "input": {
+      "scenario": "客户提到已经去过其他医院咨询，想对比价格和方案",
+      "customer_profile": {
+        "stage": "对比阶段",
+        "concern": "选择困难"
+      }
+    },
+    "expected": {
+      "recommendations": {"_check": "min_length", "value": 1}
+    }
+  },
+  {
+    "id": "REC-005",
+    "description": "术后回访场景",
+    "input": {
+      "scenario": "客户术后第3天回访，客户反馈有些肿胀",
+      "customer_profile": {
+        "stage": "术后回访",
+        "project": "双眼皮",
+        "days_post_surgery": 3
+      }
+    },
+    "expected": {
+      "recommendations": {"_check": "min_length", "value": 1}
+    }
+  },
+  {
+    "id": "REC-006",
+    "description": "朋友推荐到店",
+    "input": {
+      "scenario": "客户说是朋友推荐来的",
+      "customer_profile": {
+        "stage": "首次咨询",
+        "source": "转介绍"
+      }
+    },
+    "expected": {
+      "recommendations": {"_check": "min_length", "value": 1}
+    }
+  },
+  {
+    "id": "REC-007",
+    "description": "线上咨询转线下",
+    "input": {
+      "scenario": "客户在线上咨询后，需要引导到线下面诊",
+      "customer_profile": {
+        "stage": "线上咨询",
+        "channel": "微信"
+      }
+    },
+    "expected": {
+      "recommendations": {"_check": "min_length", "value": 1}
+    }
+  },
+  {
+    "id": "REC-008",
+    "description": "犹豫不决需要逼单",
+    "input": {
+      "scenario": "客户已经了解了方案和价格，但迟迟不下决定",
+      "customer_profile": {
+        "stage": "促单阶段",
+        "concern": "犹豫不决",
+        "visited_times": 2
+      }
+    },
+    "expected": {
+      "recommendations": {"_check": "min_length", "value": 1}
+    }
+  },
+  {
+    "id": "REC-009",
+    "description": "安全顾虑场景",
+    "input": {
+      "scenario": "客户担心手术安全性和副作用",
+      "customer_profile": {
+        "stage": "咨询阶段",
+        "concern": "安全性"
+      }
+    },
+    "expected": {
+      "recommendations": {"_check": "min_length", "value": 1}
+    }
+  },
+  {
+    "id": "REC-010",
+    "description": "空场景应返回通用推荐",
+    "input": {
+      "scenario": "",
+      "customer_profile": {}
+    },
+    "expected": {
+      "recommendations": {"_check": "min_length", "value": 0}
+    }
+  }
+]
