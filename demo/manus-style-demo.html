@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>千锤 · 营销话术 AI 操作系统</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwindcss.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc',
+              400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca',
+              800: '#3730a3', 900: '#312e81', 950: '#1e1b4b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif; }
+    
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.3); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(100, 116, 139, 0.5); }
+
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes typing { from { width: 0; } to { width: 100%; } }
+    @keyframes blink { 50% { border-color: transparent; } }
+    @keyframes pulse-dot { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    @keyframes countUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
+    .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+    .slide-in-right { animation: slideInRight 0.5s ease-out forwards; }
+    .count-up { animation: countUp 0.5s ease-out forwards; }
+    
+    .typing-dot { animation: pulse-dot 1.4s infinite; }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(71, 85, 105, 0.3); }
+    .glass-light { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(8px); border: 1px solid rgba(71, 85, 105, 0.2); }
+
+    .result-panel { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    .suggestion-chip { transition: all 0.2s ease; }
+    .suggestion-chip:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2); }
+
+    .msg-enter { animation: fadeInUp 0.3s ease-out forwards; }
+
+    .tab-active { background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.15)); border-color: rgba(99, 102, 241, 0.5); color: #a5b4fc; }
+
+    .progress-bar { transition: width 1s ease-out; }
+
+    .rank-bar { transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+
+    .editable-highlight { transition: all 0.2s ease; }
+    .editable-highlight:hover { background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.4); }
+
+    .glow-border { box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3), 0 0 20px rgba(99, 102, 241, 0.05); }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 h-screen overflow-hidden">
+
+  <div id="app" class="flex h-screen">
+    <!-- 左侧：对话面板 -->
+    <div class="w-[420px] min-w-[420px] flex flex-col border-r border-slate-800/60 bg-slate-950">
+      <!-- 顶部标题 -->
+      <div class="px-5 py-4 border-b border-slate-800/40 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <div>
+          <h1 class="text-base font-semibold bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-purple-300">千锤 · AI 操作系统</h1>
+          <p class="text-[11px] text-slate-500">营销话术智能分析与优化</p>
+        </div>
+        <div class="ml-auto flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-xs text-emerald-400/80">在线</span>
+        </div>
+      </div>
+
+      <!-- 消息列表 -->
+      <div id="messageList" class="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+        <!-- 欢迎消息 -->
+        <div class="msg-enter">
+          <div class="flex gap-3">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs text-slate-500 mb-1.5">千锤 AI · 刚刚</div>
+              <div class="glass rounded-2xl rounded-tl-md px-4 py-3 text-sm text-slate-200 leading-relaxed">
+                <p>👋 你好！我是千锤 AI 操作系统助手。</p>
+                <p class="mt-2">我可以帮你实时分析<strong class="text-indigo-300">留联率</strong>、<strong class="text-indigo-300">对话质量</strong>，优化话术策略。你想了解什么？</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 快捷指令 -->
+      <div id="suggestions" class="px-4 pb-3">
+        <div class="flex flex-wrap gap-2">
+          <button onclick="handleSuggestion('dashboard')" class="suggestion-chip glass-light rounded-full px-3.5 py-1.5 text-xs text-slate-300 hover:text-indigo-300 hover:border-indigo-500/30 cursor-pointer flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            今日留联率排行
+          </button>
+          <button onclick="handleSuggestion('analysis')" class="suggestion-chip glass-light rounded-full px-3.5 py-1.5 text-xs text-slate-300 hover:text-indigo-300 hover:border-indigo-500/30 cursor-pointer flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            分析留联率下降原因
+          </button>
+          <button onclick="handleSuggestion('script')" class="suggestion-chip glass-light rounded-full px-3.5 py-1.5 text-xs text-slate-300 hover:text-indigo-300 hover:border-indigo-500/30 cursor-pointer flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            优化低效话术
+          </button>
+          <button onclick="handleSuggestion('person')" class="suggestion-chip glass-light rounded-full px-3.5 py-1.5 text-xs text-slate-300 hover:text-indigo-300 hover:border-indigo-500/30 cursor-pointer flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            人员话术诊断
+          </button>
+          <button onclick="handleSuggestion('training')" class="suggestion-chip glass-light rounded-full px-3.5 py-1.5 text-xs text-slate-300 hover:text-indigo-300 hover:border-indigo-500/30 cursor-pointer flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            话术演练验收
+          </button>
+        </div>
+      </div>
+
+      <!-- 输入框 -->
+      <div class="px-4 pb-4">
+        <div class="glass rounded-2xl p-1 glow-border">
+          <div class="flex items-end gap-2">
+            <textarea id="chatInput" 
+              class="flex-1 bg-transparent text-sm text-slate-200 placeholder-slate-500 resize-none px-3 py-2.5 outline-none max-h-[120px]" 
+              placeholder="输入你想了解的内容，或点击上方快捷指令..." 
+              rows="1"
+              onkeydown="handleKeyDown(event)"
+              oninput="autoResize(this)"></textarea>
+            <button onclick="sendMessage()" class="mb-1 mr-1 w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center hover:from-indigo-400 hover:to-purple-500 transition-all active:scale-95 flex-shrink-0 shadow-lg shadow-indigo-500/20">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧：结果面板 -->
+    <div class="flex-1 flex flex-col bg-slate-900/50 overflow-hidden">
+      <!-- 右侧顶部栏 -->
+      <div class="h-14 border-b border-slate-800/40 flex items-center px-6 justify-between">
+        <div id="resultTitle" class="flex items-center gap-2 text-sm text-slate-400">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+          <span>结果看板</span>
+        </div>
+        <div id="resultActions" class="flex items-center gap-2" style="display:none;">
+          <button class="text-xs glass-light rounded-lg px-3 py-1.5 text-slate-300 hover:text-white transition-colors flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            导出
+          </button>
+          <button class="text-xs glass-light rounded-lg px-3 py-1.5 text-slate-300 hover:text-white transition-colors flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+            分享
+          </button>
+        </div>
+      </div>
+
+      <!-- 右侧内容区 -->
+      <div id="resultContent" class="flex-1 overflow-y-auto">
+        <!-- 默认欢迎状态 -->
+        <div id="welcomeState" class="h-full flex flex-col items-center justify-center px-8">
+          <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-600/20 border border-indigo-500/20 flex items-center justify-center mb-6">
+            <svg class="w-10 h-10 text-indigo-400/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <h2 class="text-lg font-medium text-slate-300 mb-2">在左侧提问，这里展示结果</h2>
+          <p class="text-sm text-slate-500 text-center max-w-md leading-relaxed">
+            通过自然语言交互，实时查看留联率看板、话术排行榜、AI 诊断分析、话术优化建议等所有结果
+          </p>
+          <div class="mt-8 grid grid-cols-3 gap-4 max-w-lg w-full">
+            <div class="glass-light rounded-xl p-4 text-center">
+              <div class="text-2xl mb-2">📊</div>
+              <div class="text-xs text-slate-400">数据看板</div>
+            </div>
+            <div class="glass-light rounded-xl p-4 text-center">
+              <div class="text-2xl mb-2">🏆</div>
+              <div class="text-xs text-slate-400">排行榜</div>
+            </div>
+            <div class="glass-light rounded-xl p-4 text-center">
+              <div class="text-2xl mb-2">✏️</div>
+              <div class="text-xs text-slate-400">话术编辑</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 结果模板 -->
+
+  <!-- 留联率看板模板 -->
+  <template id="tmpl-dashboard">
+    <div class="p-6 space-y-6 fade-in">
+      <!-- 概览卡片 -->
+      <div class="grid grid-cols-4 gap-4">
+        <div class="glass rounded-xl p-4 count-up" style="animation-delay: 0.1s">
+          <div class="text-xs text-slate-500 mb-1">今日留联率</div>
+          <div class="text-2xl font-bold text-emerald-400">42.8%</div>
+          <div class="flex items-center gap-1 mt-1"><span class="text-xs text-emerald-400">↑ 3.2%</span><span class="text-xs text-slate-500">vs 昨日</span></div>
+        </div>
+        <div class="glass rounded-xl p-4 count-up" style="animation-delay: 0.2s">
+          <div class="text-xs text-slate-500 mb-1">AI 留联率</div>
+          <div class="text-2xl font-bold text-indigo-400">45.6%</div>
+          <div class="flex items-center gap-1 mt-1"><span class="text-xs text-emerald-400">↑ 5.1%</span><span class="text-xs text-slate-500">vs 昨日</span></div>
+        </div>
+        <div class="glass rounded-xl p-4 count-up" style="animation-delay: 0.3s">
+          <div class="text-xs text-slate-500 mb-1">人工留联率</div>
+          <div class="text-2xl font-bold text-amber-400">38.2%</div>
+          <div class="flex items-center gap-1 mt-1"><span class="text-xs text-rose-400">↓ 1.5%</span><span class="text-xs text-slate-500">vs 昨日</span></div>
+        </div>
+        <div class="glass rounded-xl p-4 count-up" style="animation-delay: 0.4s">
+          <div class="text-xs text-slate-500 mb-1">总对话数</div>
+          <div class="text-2xl font-bold text-slate-200">1,284</div>
+          <div class="flex items-center gap-1 mt-1"><span class="text-xs text-emerald-400">↑ 12%</span><span class="text-xs text-slate-500">vs 昨日</span></div>
+        </div>
+      </div>
+
+      <!-- 排行榜 -->
+      <div class="glass rounded-xl p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-medium text-slate-200 flex items-center gap-2">
+            <span class="text-lg">🏆</span> 留联率排行榜（今日）
+          </h3>
+          <div class="flex gap-1.5">
+            <button class="tab-active text-xs rounded-lg px-3 py-1 border border-transparent">全部</button>
+            <button class="text-xs text-slate-400 rounded-lg px-3 py-1 border border-transparent hover:border-slate-600 hover:text-slate-300">AI</button>
+            <button class="text-xs text-slate-400 rounded-lg px-3 py-1 border border-transparent hover:border-slate-600 hover:text-slate-300">人工</button>
+          </div>
+        </div>
+        <div class="space-y-3" id="rankList">
+          <div class="flex items-center gap-3 slide-in-right" style="animation-delay: 0.1s">
+            <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 text-xs flex items-center justify-center font-bold">1</span>
+            <div class="flex-1">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-sm text-slate-200">张明（AI 机器人）</span>
+                <span class="text-sm font-semibold text-emerald-400">58.3%</span>
+              </div>
+              <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden"><div class="rank-bar h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full" style="width: 58.3%"></div></div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 slide-in-right" style="animation-delay: 0.2s">
+            <span class="w-6 h-6 rounded-full bg-slate-600/30 text-slate-300 text-xs flex items-center justify-center font-bold">2</span>
+            <div class="flex-1">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-sm text-slate-200">李婷（人工客服）</span>
+                <span class="text-sm font-semibold text-emerald-400">52.1%</span>
+              </div>
+              <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden"><div class="rank-bar h-full bg-gradient-to-r from-indigo-500 to-indigo-400 rounded-full" style="width: 52.1%"></div></div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 slide-in-right" style="animation-delay: 0.3s">
+            <span class="w-6 h-6 rounded-full bg-orange-600/20 text-orange-400 text-xs flex items-center justify-center font-bold">3</span>
+            <div class="flex-1">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-sm text-slate-200">王芳（AI 机器人）</span>
+                <span class="text-sm font-semibold text-amber-400">47.6%</span>
+              </div>
+              <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden"><div class="rank-bar h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full" style="width: 47.6%"></div></div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 slide-in-right" style="animation-delay: 0.4s">
+            <span class="w-6 h-6 rounded-full bg-slate-700/30 text-slate-400 text-xs flex items-center justify-center">4</span>
+            <div class="flex-1">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-sm text-slate-200">陈杰（人工客服）</span>
+                <span class="text-sm font-semibold text-amber-400">41.2%</span>
+              </div>
+              <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden"><div class="rank-bar h-full bg-gradient-to-r from-amber-500/70 to-amber-400/70 rounded-full" style="width: 41.2%"></div></div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 slide-in-right" style="animation-delay: 0.5s">
+            <span class="w-6 h-6 rounded-full bg-slate-700/30 text-slate-400 text-xs flex items-center justify-center">5</span>
+            <div class="flex-1">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-sm text-slate-200">赵磊（AI 机器人）</span>
+                <span class="text-sm font-semibold text-rose-400">32.5%</span>
+              </div>
+              <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden"><div class="rank-bar h-full bg-gradient-to-r from-rose-500/70 to-rose-400/70 rounded-full" style="width: 32.5%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 趋势图 -->
+      <div class="glass rounded-xl p-5">
+        <h3 class="text-sm font-medium text-slate-200 mb-4">留联率 7 日趋势</h3>
+        <div class="h-48 flex items-end gap-3 px-4">
+          <div class="flex-1 flex flex-col items-center gap-1">
+            <div class="w-full bg-gradient-to-t from-indigo-500/60 to-indigo-400/40 rounded-t-md transition-all duration-1000" style="height: 55%"></div>
+            <span class="text-xs text-slate-500">3/9</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-1">
+            <div class="w-full bg-gradient-to-t from-indigo-500/60 to-indigo-400/40 rounded-t-md transition-all duration-1000" style="height: 48%"></div>
+            <span class="text-xs text-slate-500">3/10</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-1">
+            <div class="w-full bg-gradient-to-t from-indigo-500/60 to-indigo-400/40 rounded-t-md transition-all duration-1000" style="height: 62%"></div>
+            <span class="text-xs text-slate-500">3/11</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-1">
+            <div class="w-full bg-gradient-to-t from-indigo-500/60 to-indigo-400/40 rounded-t-md transition-all duration-1000" style="height: 40%"></div>
+            <span class="text-xs text-slate-500">3/12</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-1">
+            <div class="w-full bg-gradient-to-t from-indigo-500/60 to-indigo-400/40 rounded-t-md transition-all duration-1000" style="height: 58%"></div>
+            <span class="text-xs text-slate-500">3/13</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-1">
+            <div class="w-full bg-gradient-to-t from-indigo-500/60 to-indigo-400/40 rounded-t-md transition-all duration-1000" style="height: 52%"></div>
+            <span class="text-xs text-slate-500">3/14</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-1">
+            <div class="w-full bg-gradient-to-t from-emerald-500/60 to-emerald-400/40 rounded-t-md transition-all duration-1000 ring-1 ring-emerald-400/30" style="height: 68%"></div>
+            <span class="text-xs text-emerald-400 font-medium">今天</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- 分析模板 -->
+  <template id="tmpl-analysis">
+    <div class="p-6 space-y-5 fade-in">
+      <!-- 问题总览 -->
+      <div class="glass rounded-xl p-5">
+        <h3 class="text-sm font-medium text-slate-200 mb-4 flex items-center gap-2">
+          <span class="w-6 h-6 rounded-lg bg-amber-500/20 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg></span>
+          留联率下降原因分析（3月15日）
+        </h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-slate-800/50 rounded-lg p-4 border border-rose-500/10 slide-in-right" style="animation-delay: 0.1s">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-2 h-2 rounded-full bg-rose-400"></span>
+              <span class="text-xs text-rose-300 font-medium">高影响</span>
+            </div>
+            <h4 class="text-sm text-slate-200 font-medium mb-1">价格异议处理话术失效</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">「双眼皮手术多少钱」类问题回复模板导致 23% 客户直接离开。AI 回复过早暴露价格区间，缺乏价值铺垫。</p>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="text-xs bg-rose-500/10 text-rose-300 rounded-full px-2 py-0.5">影响对话 86 条</span>
+              <span class="text-xs bg-rose-500/10 text-rose-300 rounded-full px-2 py-0.5">损失留联 ≈20</span>
+            </div>
+          </div>
+          <div class="bg-slate-800/50 rounded-lg p-4 border border-amber-500/10 slide-in-right" style="animation-delay: 0.2s">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              <span class="text-xs text-amber-300 font-medium">中影响</span>
+            </div>
+            <h4 class="text-sm text-slate-200 font-medium mb-1">开口话术吸引力不足</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">首条开口消息点击率下降 8%，"您好，请问有什么可以帮您？" 模板过于通用，未结合活动信息。</p>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="text-xs bg-amber-500/10 text-amber-300 rounded-full px-2 py-0.5">影响对话 124 条</span>
+              <span class="text-xs bg-amber-500/10 text-amber-300 rounded-full px-2 py-0.5">损失留联 ≈15</span>
+            </div>
+          </div>
+          <div class="bg-slate-800/50 rounded-lg p-4 border border-amber-500/10 slide-in-right" style="animation-delay: 0.3s">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              <span class="text-xs text-amber-300 font-medium">中影响</span>
+            </div>
+            <h4 class="text-sm text-slate-200 font-medium mb-1">套电时机把握不当</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">AI 在客户仅提问 1-2 句就尝试要联系方式，客户戒备心强导致流失。需要增加 2-3 轮答疑再套电。</p>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="text-xs bg-amber-500/10 text-amber-300 rounded-full px-2 py-0.5">影响对话 67 条</span>
+              <span class="text-xs bg-amber-500/10 text-amber-300 rounded-full px-2 py-0.5">损失留联 ≈12</span>
+            </div>
+          </div>
+          <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-600/20 slide-in-right" style="animation-delay: 0.4s">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+              <span class="text-xs text-slate-300 font-medium">低影响</span>
+            </div>
+            <h4 class="text-sm text-slate-200 font-medium mb-1">问诊流程断裂</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">部分对话在答疑→问诊环节断裂，客户提出多个项目咨询时，AI 未能有效归纳需求。</p>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="text-xs bg-slate-500/10 text-slate-400 rounded-full px-2 py-0.5">影响对话 31 条</span>
+              <span class="text-xs bg-slate-500/10 text-slate-400 rounded-full px-2 py-0.5">损失留联 ≈5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI 建议操作 -->
+      <div class="glass rounded-xl p-5">
+        <h3 class="text-sm font-medium text-slate-200 mb-4 flex items-center gap-2">
+          <span class="w-6 h-6 rounded-lg bg-indigo-500/20 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></span>
+          AI 建议操作
+        </h3>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3 bg-indigo-500/5 rounded-lg p-3 border border-indigo-500/10">
+            <span class="w-5 h-5 rounded-md bg-indigo-500/20 text-indigo-400 text-xs flex items-center justify-center mt-0.5 flex-shrink-0">1</span>
+            <div class="flex-1">
+              <p class="text-sm text-slate-200">立即修改「价格异议」话术模板，增加价值铺垫环节</p>
+              <p class="text-xs text-slate-500 mt-1">预估可提升留联率 +3.5%</p>
+            </div>
+            <button onclick="handleSuggestion('script')" class="text-xs bg-indigo-500/20 text-indigo-300 rounded-lg px-3 py-1.5 hover:bg-indigo-500/30 transition-colors flex-shrink-0">去优化 →</button>
+          </div>
+          <div class="flex items-start gap-3 bg-slate-800/30 rounded-lg p-3 border border-slate-700/20">
+            <span class="w-5 h-5 rounded-md bg-slate-600/30 text-slate-400 text-xs flex items-center justify-center mt-0.5 flex-shrink-0">2</span>
+            <div class="flex-1">
+              <p class="text-sm text-slate-200">更新开口话术，融入本周活动信息</p>
+              <p class="text-xs text-slate-500 mt-1">预估可提升开口率 +5%</p>
+            </div>
+            <button class="text-xs bg-slate-600/20 text-slate-400 rounded-lg px-3 py-1.5 hover:bg-slate-600/30 transition-colors flex-shrink-0">去优化 →</button>
+          </div>
+          <div class="flex items-start gap-3 bg-slate-800/30 rounded-lg p-3 border border-slate-700/20">
+            <span class="w-5 h-5 rounded-md bg-slate-600/30 text-slate-400 text-xs flex items-center justify-center mt-0.5 flex-shrink-0">3</span>
+            <div class="flex-1">
+              <p class="text-sm text-slate-200">调整套电策略：答疑 ≥3 轮后再尝试要联系方式</p>
+              <p class="text-xs text-slate-500 mt-1">预估可提升留联率 +2.1%</p>
+            </div>
+            <button class="text-xs bg-slate-600/20 text-slate-400 rounded-lg px-3 py-1.5 hover:bg-slate-600/30 transition-colors flex-shrink-0">去优化 →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- 话术优化模板 -->
+  <template id="tmpl-script">
+    <div class="p-6 space-y-5 fade-in">
+      <!-- 当前话术 vs 优化建议 -->
+      <div class="glass rounded-xl p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-medium text-slate-200 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-lg bg-emerald-500/20 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></span>
+            话术优化对比
+          </h3>
+          <span class="text-xs bg-rose-500/10 text-rose-300 rounded-full px-2.5 py-0.5">低效话术 · 价格异议</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <!-- 原话术 -->
+          <div class="bg-slate-800/50 rounded-lg p-4 border border-rose-500/10">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-xs text-rose-400 font-medium">❌ 当前话术</span>
+              <span class="text-xs bg-rose-500/10 text-rose-300 rounded-full px-2 py-0.5">留联率 19%</span>
+            </div>
+            <div class="text-sm text-slate-300 leading-relaxed space-y-2 bg-slate-900/50 rounded-lg p-3">
+              <p><span class="text-slate-500">[客户]</span> 双眼皮手术多少钱？</p>
+              <p><span class="text-indigo-400">[AI]</span> 您好～我们双眼皮手术价格在 3800-12800 元之间，具体价格需要根据您的眼部情况来定。可以留个联系方式，我们安排医生给您看看哦～</p>
+            </div>
+            <div class="mt-3 text-xs text-slate-500">
+              <span class="text-rose-400">问题：</span>直接暴露价格，缺乏价值铺垫，客户得到价格后直接离开
+            </div>
+          </div>
+
+          <!-- AI 优化话术 -->
+          <div class="bg-slate-800/50 rounded-lg p-4 border border-emerald-500/10">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-xs text-emerald-400 font-medium">✅ AI 优化建议</span>
+              <span class="text-xs bg-emerald-500/10 text-emerald-300 rounded-full px-2 py-0.5">预估留联率 38%</span>
+            </div>
+            <div class="text-sm text-slate-300 leading-relaxed space-y-2 bg-slate-900/50 rounded-lg p-3 editable-highlight border border-transparent rounded-lg cursor-text" contenteditable="true">
+              <p><span class="text-slate-500">[客户]</span> 双眼皮手术多少钱？</p>
+              <p><span class="text-emerald-400">[AI]</span> 亲爱的～想做双眼皮呀！我先帮您了解下～您现在是单眼皮还是内双呢？因为不同的基础条件，适合的术式和效果差别还挺大的～</p>
+              <p><span class="text-slate-500">[客户]</span> 内双</p>
+              <p><span class="text-emerald-400">[AI]</span> 内双的话效果会特别好的！我们最近刚好有位专家李主任在做内双改全切的案例特别多，效果都很自然～我发几张案例给您看看？顺便帮您预约个免费的面诊时间，让李主任帮您看看适合哪种方案？</p>
+            </div>
+            <div class="mt-3 text-xs text-slate-500 flex items-center gap-2">
+              <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+              <span class="text-indigo-400">可直接编辑右侧优化话术</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 确认操作 -->
+      <div class="glass rounded-xl p-5">
+        <h3 class="text-sm font-medium text-slate-200 mb-4">选择操作</h3>
+        <div class="flex gap-3">
+          <button onclick="confirmScript('ai')" class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl py-3 text-sm font-medium hover:from-indigo-500 hover:to-purple-500 transition-all active:scale-[0.98] shadow-lg shadow-indigo-500/20">
+            ✅ 采用 AI 建议，自动更新
+          </button>
+          <button onclick="confirmScript('manual')" class="flex-1 glass text-slate-300 rounded-xl py-3 text-sm font-medium hover:text-white transition-colors">
+            ✏️ 我已手动修改，确认提交
+          </button>
+        </div>
+        <div class="mt-4 flex items-center gap-4 text-xs text-slate-500">
+          <div class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            确认后将自动更新提示词
+          </div>
+          <div class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            同步至话术宝 + 演练场
+          </div>
+        </div>
+      </div>
+
+      <!-- 关联推荐 -->
+      <div class="glass rounded-xl p-5">
+        <h3 class="text-sm font-medium text-slate-200 mb-3 flex items-center gap-2">
+          <span>🔗</span> 关联操作推荐
+        </h3>
+        <div class="grid grid-cols-2 gap-3">
+          <button onclick="handleSuggestion('training')" class="bg-slate-800/30 rounded-lg p-3 text-left border border-slate-700/20 hover:border-indigo-500/20 transition-colors">
+            <div class="text-sm text-slate-200 mb-1">📝 安排话术演练</div>
+            <p class="text-xs text-slate-500">更新后的话术需要员工验收</p>
+          </button>
+          <button onclick="handleSuggestion('person')" class="bg-slate-800/30 rounded-lg p-3 text-left border border-slate-700/20 hover:border-indigo-500/20 transition-colors">
+            <div class="text-sm text-slate-200 mb-1">👤 查看人员排行</div>
+            <p class="text-xs text-slate-500">看看谁还需要加强训练</p>
+          </button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- 人员诊断模板 -->
+  <template id="tmpl-person">
+    <div class="p-6 space-y-5 fade-in">
+      <div class="glass rounded-xl p-5">
+        <h3 class="text-sm font-medium text-slate-200 mb-4 flex items-center gap-2">
+          <span class="w-6 h-6 rounded-lg bg-rose-500/20 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></span>
+          人员话术诊断报告
+        </h3>
+
+        <!-- 人员卡片 -->
+        <div class="space-y-4">
+          <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-700/20 slide-in-right" style="animation-delay: 0.1s">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500/20 to-rose-600/20 flex items-center justify-center text-rose-400 text-sm font-bold">陈</div>
+                <div>
+                  <div class="text-sm text-slate-200 font-medium">陈杰（人工客服）</div>
+                  <div class="text-xs text-slate-500">今日接待 42 条对话 · 留联率 41.2%</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-sm text-amber-400 font-semibold">需改进</div>
+                <div class="text-xs text-slate-500">综合评分 62/100</div>
+              </div>
+            </div>
+
+            <!-- 维度评分 -->
+            <div class="grid grid-cols-5 gap-2 mb-3">
+              <div class="text-center">
+                <div class="text-xs text-slate-500 mb-1">开口率</div>
+                <div class="relative w-full h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-emerald-400 rounded-full" style="width:78%"></div></div>
+                <div class="text-xs text-emerald-400 mt-0.5">78%</div>
+              </div>
+              <div class="text-center">
+                <div class="text-xs text-slate-500 mb-1">答疑质量</div>
+                <div class="relative w-full h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-400 rounded-full" style="width:55%"></div></div>
+                <div class="text-xs text-amber-400 mt-0.5">55%</div>
+              </div>
+              <div class="text-center">
+                <div class="text-xs text-slate-500 mb-1">问诊引导</div>
+                <div class="relative w-full h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-rose-400 rounded-full" style="width:35%"></div></div>
+                <div class="text-xs text-rose-400 mt-0.5">35%</div>
+              </div>
+              <div class="text-center">
+                <div class="text-xs text-slate-500 mb-1">套电能力</div>
+                <div class="relative w-full h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-400 rounded-full" style="width:48%"></div></div>
+                <div class="text-xs text-amber-400 mt-0.5">48%</div>
+              </div>
+              <div class="text-center">
+                <div class="text-xs text-slate-500 mb-1">挽回能力</div>
+                <div class="relative w-full h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-400 rounded-full" style="width:42%"></div></div>
+                <div class="text-xs text-amber-400 mt-0.5">42%</div>
+              </div>
+            </div>
+
+            <!-- 问题 -->
+            <div class="bg-slate-900/40 rounded-lg p-3">
+              <div class="text-xs text-rose-300 font-medium mb-2">🔍 主要问题</div>
+              <ul class="text-xs text-slate-400 space-y-1.5 list-none">
+                <li class="flex gap-2"><span class="text-rose-400 flex-shrink-0">•</span>问诊环节薄弱，62% 对话未进行有效问诊就直接套电</li>
+                <li class="flex gap-2"><span class="text-amber-400 flex-shrink-0">•</span>价格异议处理单一，多次使用「看情况而定」回避</li>
+                <li class="flex gap-2"><span class="text-amber-400 flex-shrink-0">•</span>挽回话术缺乏，客户说「再考虑」后直接结束对话</li>
+              </ul>
+            </div>
+
+            <div class="mt-3 flex gap-2">
+              <button class="text-xs bg-indigo-500/15 text-indigo-300 rounded-lg px-3 py-1.5 hover:bg-indigo-500/25 transition-colors">查看典型对话</button>
+              <button onclick="handleSuggestion('training')" class="text-xs bg-emerald-500/15 text-emerald-300 rounded-lg px-3 py-1.5 hover:bg-emerald-500/25 transition-colors">安排演练任务</button>
+            </div>
+          </div>
+
+          <!-- 李婷 -->
+          <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-700/20 slide-in-right" style="animation-delay: 0.3s">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 flex items-center justify-center text-emerald-400 text-sm font-bold">李</div>
+                <div>
+                  <div class="text-sm text-slate-200 font-medium">李婷（人工客服）<span class="ml-1.5 text-xs text-amber-400">👑 销冠</span></div>
+                  <div class="text-xs text-slate-500">今日接待 38 条对话 · 留联率 52.1%</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-sm text-emerald-400 font-semibold">优秀</div>
+                <div class="text-xs text-slate-500">综合评分 88/100</div>
+              </div>
+            </div>
+            <div class="bg-slate-900/40 rounded-lg p-3">
+              <div class="text-xs text-emerald-300 font-medium mb-2">✨ 话术亮点</div>
+              <ul class="text-xs text-slate-400 space-y-1.5 list-none">
+                <li class="flex gap-2"><span class="text-emerald-400 flex-shrink-0">•</span>善于用案例图片引导客户，转化率高出团队平均 18%</li>
+                <li class="flex gap-2"><span class="text-emerald-400 flex-shrink-0">•</span>价格异议处理灵活，常用「对比法」和「分期法」</li>
+                <li class="flex gap-2"><span class="text-emerald-400 flex-shrink-0">•</span>挽回话术优秀，「再考虑」类客户挽回率 34%</li>
+              </ul>
+            </div>
+            <div class="mt-3">
+              <button class="text-xs bg-indigo-500/15 text-indigo-300 rounded-lg px-3 py-1.5 hover:bg-indigo-500/25 transition-colors">提取销冠话术 → 输入到 AI 模型</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- 演练验收模板 -->
+  <template id="tmpl-training">
+    <div class="p-6 space-y-5 fade-in">
+      <div class="glass rounded-xl p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-medium text-slate-200 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-lg bg-cyan-500/20 flex items-center justify-center">🎯</span>
+            话术演练 · 验收看板
+          </h3>
+          <span class="text-xs text-slate-500">本周更新话术 3 条 · 待验收 2 人</span>
+        </div>
+
+        <!-- 验收进度 -->
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-700/20">
+            <div class="text-xs text-slate-500 mb-2">已验收通过</div>
+            <div class="text-2xl font-bold text-emerald-400">6 <span class="text-sm text-slate-500 font-normal">/ 8 人</span></div>
+            <div class="w-full h-1.5 bg-slate-700 rounded-full overflow-hidden mt-2"><div class="h-full bg-emerald-400 rounded-full progress-bar" style="width:75%"></div></div>
+          </div>
+          <div class="bg-slate-800/50 rounded-lg p-4 border border-amber-500/10">
+            <div class="text-xs text-slate-500 mb-2">待演练验收</div>
+            <div class="text-2xl font-bold text-amber-400">2 <span class="text-sm text-slate-500 font-normal">人</span></div>
+            <div class="text-xs text-amber-400 mt-2 flex items-center gap-1">
+              <svg class="w-3 h-3 animate-pulse" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+              需要催促验收
+            </div>
+          </div>
+        </div>
+
+        <!-- 待验收人员 -->
+        <div class="space-y-3">
+          <div class="bg-amber-500/5 rounded-lg p-4 border border-amber-500/10">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 text-sm font-bold">陈</div>
+                <div>
+                  <div class="text-sm text-slate-200">陈杰</div>
+                  <div class="text-xs text-slate-500">待演练：价格异议处理（更新版）</div>
+                </div>
+              </div>
+              <button class="text-xs bg-amber-500/20 text-amber-300 rounded-lg px-3 py-1.5 hover:bg-amber-500/30 transition-colors">发起演练 →</button>
+            </div>
+          </div>
+          <div class="bg-amber-500/5 rounded-lg p-4 border border-amber-500/10">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 text-sm font-bold">赵</div>
+                <div>
+                  <div class="text-sm text-slate-200">赵磊</div>
+                  <div class="text-xs text-slate-500">待演练：开口话术 + 套电流程</div>
+                </div>
+              </div>
+              <button class="text-xs bg-amber-500/20 text-amber-300 rounded-lg px-3 py-1.5 hover:bg-amber-500/30 transition-colors">发起演练 →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 模拟演练场 -->
+      <div class="glass rounded-xl p-5">
+        <h3 class="text-sm font-medium text-slate-200 mb-4 flex items-center gap-2">
+          <span>🎭</span> 实时模拟演练
+        </h3>
+        <div class="bg-slate-800/50 rounded-lg p-4 border border-slate-700/20">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="text-xs text-emerald-400">AI 扮演客户</span>
+            </div>
+            <span class="text-xs text-slate-600">|</span>
+            <span class="text-xs text-slate-400">场景：双眼皮咨询 · 价格敏感型</span>
+          </div>
+          <div class="space-y-3 text-sm">
+            <div class="flex gap-2">
+              <span class="text-amber-400 text-xs flex-shrink-0 mt-0.5">👤 客户：</span>
+              <span class="text-slate-300">你们双眼皮最便宜多少钱做得了？</span>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-indigo-400 text-xs flex-shrink-0 mt-0.5">💬 你说：</span>
+              <input type="text" class="flex-1 bg-slate-900/60 border border-slate-600/30 rounded-lg px-3 py-2 text-sm text-slate-200 placeholder-slate-500 outline-none focus:border-indigo-500/50" placeholder="在这里输入你的回复话术...">
+            </div>
+          </div>
+          <div class="mt-3 flex justify-end">
+            <button class="text-xs bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg px-4 py-2 hover:from-indigo-500 hover:to-purple-500 transition-all">发送并获取 AI 评分</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    const messageList = document.getElementById('messageList');
+    const chatInput = document.getElementById('chatInput');
+    const resultContent = document.getElementById('resultContent');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultActions = document.getElementById('resultActions');
+    const welcomeState = document.getElementById('welcomeState');
+
+    const scenarioMap = {
+      dashboard: {
+        userMsg: '查看今日留联率排行榜',
+        aiMsg: '已为您生成今日留联率数据看板，右侧可查看：\n\n📊 **总体留联率 42.8%**，较昨日上升 3.2%\n🤖 AI 留联率 45.6%，高于人工 7.4 个百分点\n🏆 排行榜前 3：张明（AI）58.3%、李婷（人工）52.1%、王芳（AI）47.6%\n\n点击右侧排行榜可查看详细分析。',
+        template: 'tmpl-dashboard',
+        title: '📊 今日留联率看板',
+      },
+      analysis: {
+        userMsg: '分析今天留联率下降的原因',
+        aiMsg: '已完成今日留联率下降原因分析，发现 **4 个关键问题**：\n\n🔴 **高影响**：价格异议话术模板失效，损失约 20 个留联\n🟡 **中影响**：开口话术吸引力不足 + 套电时机过早\n⚪ **低影响**：问诊流程断裂\n\n右侧已展示详细分析和 AI 建议操作，点击「去优化」可直接修改话术。',
+        template: 'tmpl-analysis',
+        title: '🔍 留联率下降原因分析',
+      },
+      script: {
+        userMsg: '帮我优化低效的价格异议话术',
+        aiMsg: '已识别到「价格异议」类话术留联率仅 **19%**，为您生成优化方案：\n\n✅ **优化策略**：增加价值铺垫 → 案例引导 → 自然套电\n📈 预估优化后留联率可提升至 **38%**\n\n右侧展示了原话术和 AI 优化建议的对比，**您可以直接在右侧编辑**话术内容，满意后点击确认即可自动更新。',
+        template: 'tmpl-script',
+        title: '✏️ 话术优化 · 价格异议',
+      },
+      person: {
+        userMsg: '看一下每个客服人员的话术诊断报告',
+        aiMsg: '已生成人员话术诊断报告：\n\n🔴 **陈杰**：综合评分 62/100，问诊引导能力薄弱，建议安排演练\n🟢 **李婷**（销冠）：综合评分 88/100，话术可提取为 AI 模型训练素材\n\n右侧展示了各维度详细评分和问题分析。可以直接安排演练任务或提取销冠话术。',
+        template: 'tmpl-person',
+        title: '👥 人员话术诊断报告',
+      },
+      training: {
+        userMsg: '查看话术演练验收进度',
+        aiMsg: '话术演练验收进度如下：\n\n✅ 已通过 **6/8 人**（75%）\n⚠️ 待验收 **2 人**：陈杰（价格异议）、赵磊（开口话术+套电）\n\n右侧可直接发起演练，AI 会扮演客户进行模拟对话，并实时评分。建议尽快完成验收。',
+        template: 'tmpl-training',
+        title: '🎯 话术演练 · 验收看板',
+      },
+    };
+
+    function handleSuggestion(type) {
+      const scenario = scenarioMap[type];
+      if (!scenario) return;
+
+      chatInput.value = '';
+      addUserMessage(scenario.userMsg);
+
+      setTimeout(() => {
+        showTypingIndicator();
+        setTimeout(() => {
+          removeTypingIndicator();
+          addAIMessage(scenario.aiMsg);
+          showResult(scenario.template, scenario.title);
+        }, 1200 + Math.random() * 800);
+      }, 300);
+    }
+
+    function sendMessage() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+
+      addUserMessage(text);
+      chatInput.value = '';
+      chatInput.style.height = 'auto';
+
+      setTimeout(() => {
+        showTypingIndicator();
+        setTimeout(() => {
+          removeTypingIndicator();
+
+          const lower = text.toLowerCase();
+          if (lower.includes('留联') || lower.includes('排行') || lower.includes('看板') || lower.includes('数据')) {
+            const s = scenarioMap.dashboard;
+            addAIMessage(s.aiMsg);
+            showResult(s.template, s.title);
+          } else if (lower.includes('原因') || lower.includes('下降') || lower.includes('分析') || lower.includes('为什么')) {
+            const s = scenarioMap.analysis;
+            addAIMessage(s.aiMsg);
+            showResult(s.template, s.title);
+          } else if (lower.includes('话术') || lower.includes('优化') || lower.includes('改') || lower.includes('价格')) {
+            const s = scenarioMap.script;
+            addAIMessage(s.aiMsg);
+            showResult(s.template, s.title);
+          } else if (lower.includes('人员') || lower.includes('客服') || lower.includes('诊断') || lower.includes('谁')) {
+            const s = scenarioMap.person;
+            addAIMessage(s.aiMsg);
+            showResult(s.template, s.title);
+          } else if (lower.includes('演练') || lower.includes('培训') || lower.includes('验收')) {
+            const s = scenarioMap.training;
+            addAIMessage(s.aiMsg);
+            showResult(s.template, s.title);
+          } else {
+            addAIMessage('好的，我正在帮您分析中...\n\n您可以试试：\n• 输入「今日留联率」查看数据看板\n• 输入「分析下降原因」获取诊断\n• 输入「优化话术」改进低效话术\n• 输入「人员诊断」查看客服表现\n• 输入「演练验收」管理培训进度');
+          }
+        }, 1000 + Math.random() * 1000);
+      }, 200);
+    }
+
+    function addUserMessage(text) {
+      const div = document.createElement('div');
+      div.className = 'msg-enter';
+      div.innerHTML = `
+        <div class="flex gap-3 justify-end">
+          <div class="max-w-[85%]">
+            <div class="text-xs text-slate-500 mb-1.5 text-right">你 · 刚刚</div>
+            <div class="bg-indigo-600/20 border border-indigo-500/20 rounded-2xl rounded-tr-md px-4 py-3 text-sm text-slate-200 leading-relaxed">
+              ${escapeHtml(text)}
+            </div>
+          </div>
+          <div class="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs text-slate-400">我</div>
+        </div>
+      `;
+      messageList.appendChild(div);
+      messageList.scrollTop = messageList.scrollHeight;
+    }
+
+    function addAIMessage(text) {
+      const div = document.createElement('div');
+      div.className = 'msg-enter';
+      const html = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-indigo-300">$1</strong>').replace(/\n/g, '<br>');
+      div.innerHTML = `
+        <div class="flex gap-3">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <div class="flex-1">
+            <div class="text-xs text-slate-500 mb-1.5">千锤 AI · 刚刚</div>
+            <div class="glass rounded-2xl rounded-tl-md px-4 py-3 text-sm text-slate-200 leading-relaxed">
+              ${html}
+            </div>
+          </div>
+        </div>
+      `;
+      messageList.appendChild(div);
+      messageList.scrollTop = messageList.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+      const div = document.createElement('div');
+      div.id = 'typingIndicator';
+      div.className = 'msg-enter';
+      div.innerHTML = `
+        <div class="flex gap-3">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <div class="flex-1">
+            <div class="text-xs text-slate-500 mb-1.5">千锤 AI · 正在分析...</div>
+            <div class="glass rounded-2xl rounded-tl-md px-4 py-3 inline-flex gap-1">
+              <span class="typing-dot w-2 h-2 bg-indigo-400 rounded-full"></span>
+              <span class="typing-dot w-2 h-2 bg-indigo-400 rounded-full"></span>
+              <span class="typing-dot w-2 h-2 bg-indigo-400 rounded-full"></span>
+            </div>
+          </div>
+        </div>
+      `;
+      messageList.appendChild(div);
+      messageList.scrollTop = messageList.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      const el = document.getElementById('typingIndicator');
+      if (el) el.remove();
+    }
+
+    function showResult(templateId, title) {
+      const tmpl = document.getElementById(templateId);
+      if (!tmpl) return;
+      resultContent.innerHTML = '';
+      resultContent.appendChild(tmpl.content.cloneNode(true));
+      resultTitle.innerHTML = `<span class="text-slate-200 font-medium">${title}</span>`;
+      resultActions.style.display = 'flex';
+
+      setTimeout(() => {
+        resultContent.querySelectorAll('.rank-bar').forEach(bar => {
+          const w = bar.style.width;
+          bar.style.width = '0%';
+          requestAnimationFrame(() => { bar.style.width = w; });
+        });
+      }, 100);
+    }
+
+    function confirmScript(type) {
+      const msg = type === 'ai' 
+        ? '✅ 已采用 AI 建议话术，正在自动更新：\n\n• 提示词已更新 → 套电机器人\n• 话术宝已同步\n• 演练场已添加验收任务\n\n建议您安排相关人员进行演练验收。' 
+        : '✅ 您的手动修改已提交，正在同步：\n\n• 提示词已更新 → 套电机器人\n• 话术宝已同步\n• 演练场已添加验收任务';
+      addAIMessage(msg);
+    }
+
+    function handleKeyDown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    }
+
+    function autoResize(el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>
